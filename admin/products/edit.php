@@ -169,12 +169,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label class="form-label">Quà đi kèm</label>
                 <textarea name="gift_description" id="gift_description" class="form-control" rows="3"><?= htmlspecialchars($gift['gift_description'] ?? '') ?></textarea>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label">Ảnh sản phẩm (chọn nhiều ảnh)</label>
-                <input type="file" name="images[]" multiple class="form-control" id="images">
-            </div>
-
             <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
             <a href="index.php" class="btn btn-secondary">Quay lại</a>
         </form>
@@ -183,16 +177,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('short_desc', {
-            height: 150,
+            height: 200,
+            filebrowserUploadUrl: '/my_website/admin/upload_image.php',
+            filebrowserUploadMethod: 'form',
             removePlugins: 'elementspath',
             toolbar: [
                 ['Bold', 'Italic', 'Underline', 'Strike'],
                 ['NumberedList', 'BulletedList'],
-                ['Link', 'Unlink'],
+                ['Link', 'Unlink', 'Image', 'Table'],
                 ['JustifyLeft', 'JustifyCenter', 'JustifyRight'],
                 ['Format']
             ]
         });
+
 
         CKEDITOR.replace('long_desc', {
             height: 250,

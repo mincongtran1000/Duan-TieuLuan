@@ -140,16 +140,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('short_desc', {
-            height: 150,
+            height: 200,
+            // filebrowserUploadUrl: '/my_website/admin/upload_image.php',
+            // filebrowserUploadMethod: 'form',
             removePlugins: 'elementspath',
             toolbar: [
                 ['Bold', 'Italic', 'Underline', 'Strike'],
                 ['NumberedList', 'BulletedList'],
-                ['Link', 'Unlink'],
+                ['Link', 'Unlink', 'Image', 'Table'],
                 ['JustifyLeft', 'JustifyCenter', 'JustifyRight'],
                 ['Format']
             ]
         });
+
 
         CKEDITOR.replace('long_desc', {
             height: 250,

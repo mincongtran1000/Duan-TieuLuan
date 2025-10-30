@@ -91,7 +91,6 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
             <h4 class="text-primary fw-semibold">
                 <?php echo number_format($product['price'], 0, ',', '.'); ?> đ
             </h4>
-
             <?php if ($product['quantity'] > 0): ?>
                 <span class="badge bg-success">Còn hàng</span>
             <?php else: ?>
@@ -121,7 +120,6 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="longDescModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-scrollable modal-xl">
                 <div class="modal-content">
@@ -142,7 +140,16 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
 </div>
 
 <style>
-    .product-view {
+    /* Modal short_desc */
+    .product-desc img {
+        max-width: 100%;
+        /* không vượt quá khung modal */
+        height: auto;
+        /* giữ tỉ lệ ảnh */
+        display: block;
+        margin: 0 auto;
+        /* căn giữa nếu muốn */
+    }    .product-view {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -183,6 +190,7 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
         transform: scale(1.1);
         border-color: #0d6efd;
     }
+    
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

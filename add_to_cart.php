@@ -47,7 +47,9 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("iiid", $transaction_id, $product_id, $quantity, $price);
 
 if ($stmt->execute()) {
-    echo "Đã thêm vào giỏ hàng.";
+    // Chuyển về trang giỏ hàng
+    header("Location: cart.php");  // cart.php là trang giỏ hàng của bạn
+    exit(); // bắt buộc phải có exit sau header để script dừng
 } else {
     echo "Lỗi khi thêm vào giỏ hàng: " . $stmt->error;
 }

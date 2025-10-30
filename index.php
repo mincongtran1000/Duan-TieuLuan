@@ -58,14 +58,15 @@ $result = $conn->query($sql);
                 $is_hot = $row['is_hot'];
                 ?>
                 <div class="col-6 col-sm-4 col-md-3 col-lg-custom">
-                    <div class="card h-100 shadow-sm position-relative">
-                        <!-- Badge hiển thị -->
-                        <?php if ($is_hot): ?>
-                            <span class="position-absolute top-0 start-0 m-2 badge bg-danger">HOT</span>
-                        <?php endif; ?>
-                        <?php if ($is_new): ?>
-                            <span class="position-absolute top-0 end-0 m-2 badge bg-success">NEW</span>
-                        <?php endif; ?>
+                    <div class="card h-200 shadow-sm position-relative">
+                        <div class="position-relative">
+                            <?php if ($is_hot): ?>
+                                <span class="badge bg-danger position-absolute top-0 start-0 translate-middle-y">HOT</span>
+                            <?php endif; ?>
+                            <?php if ($is_new): ?>
+                                <span class="badge bg-info position-absolute top-0 end-0 translate-middle-y">NEW</span>
+                            <?php endif; ?>
+                        </div>
 
                         <!-- Ảnh -->
                         <div style="width:100%; height:200px; display:flex; align-items:center; justify-content:center; background:#f9f9f9;">
