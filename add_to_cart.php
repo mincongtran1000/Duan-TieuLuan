@@ -2,15 +2,42 @@
 session_start();
 require 'includes/db.php';
 
+// Nếu chưa đăng nhập
 if (!isset($_SESSION['user_id'])) {
-    die("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.");
+    echo '
+    <div style="
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:100vh;
+        flex-direction:column;
+        font-family:Arial, sans-serif;
+    ">
+        <p style="font-size:20px; margin-bottom:20px;">
+            Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.
+        </p>
+        <a href="login.php" 
+           style="
+               padding:12px 30px;
+               background:#007bff;
+               color:white;
+               border-radius:6px;
+               text-decoration:none;
+               font-size:16px;
+           "
+           onmouseover="this.style.background=\'#0056b3\'"
+           onmouseout="this.style.background=\'#007bff\'">
+           Đăng nhập
+        </a>
+    </div>';
+    exit();
 }
 
 $user_id = $_SESSION['user_id'];
 $product_id = intval($_POST['product_id']);
 $quantity = intval($_POST['quantity'] ?? 1);
 
-// 1. Tạo hoặc lấy transaction đang pending
+// 1. Lấy hoặc tạo transaction pending
 $sql = "SELECT id FROM transactions WHERE user_id = ? AND status = 'pending' LIMIT 1";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
@@ -47,9 +74,33 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("iiid", $transaction_id, $product_id, $quantity, $price);
 
 if ($stmt->execute()) {
-    // Chuyển về trang giỏ hàng
-    header("Location: cart.php");  // cart.php là trang giỏ hàng của bạn
-    exit(); // bắt buộc phải có exit sau header để script dừng
+    echo '
+    <div style="
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:100vh;
+        flex-direction:column;
+        font-family:Arial, sans-serif;
+    ">
+        <p style="font-size:20px; margin-bottom:20px; color:green;">
+            Sản phẩm đã được thêm vào giỏ hàng!
+        </p>
+        <a href="cart.php" 
+           style="
+               padding:12px 30px;
+               background:#28a745;
+               color:white;
+               border-radius:6px;
+               text-decoration:none;
+               font-size:16px;
+           "
+           onmouseover="this.style.background=\'#1e7e34\'"
+           onmouseout="this.style.background=\'#28a745\'">
+           Xem giỏ hàng
+        </a>
+    </div>';
+    exit();
 } else {
     echo "Lỗi khi thêm vào giỏ hàng: " . $stmt->error;
 }

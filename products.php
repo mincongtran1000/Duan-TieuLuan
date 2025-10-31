@@ -43,11 +43,18 @@ if ($category_name !== 'all') {
 }
 
 // Ghép các điều kiện lại thành câu lệnh SQL
-$sql = "SELECT p.*, c.name AS category_name, pi.image AS main_image
+$sql = "SELECT 
+            p.*, 
+            c.name AS category_name, 
+            pi.image AS main_image,
+            ROUND(AVG(pr.rating), 1) AS avg_rating,
+            COUNT(pr.id) AS review_count
         FROM products p
         LEFT JOIN categories c ON p.category_id = c.id
         LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.is_main = 1
+        LEFT JOIN product_reviews pr ON pr.product_id = p.id
         WHERE " . implode(" AND ", $conditions) . "
+        GROUP BY p.id
         ORDER BY p.created_at DESC";
 
 $stmt = $conn->prepare($sql);
@@ -98,6 +105,17 @@ $result = $stmt->get_result();
                         <div class="card-body text-center">
                             <h6 class="card-title mb-2"><?= htmlspecialchars(substr($row['name'], 0, 40)) ?><?= strlen($row['name']) > 40 ? '...' : '' ?></h6>
                             <p class="fw-bold text-primary mb-1"><?= number_format($row['price'], 0, ',', '.') ?> đ</p>
+                            <!-- Đánh giá trung bình -->
+                            <p class="mb-1">
+                                <?php if ($row['review_count'] > 0): ?>
+                                    <span class="text-warning">
+                                        <?= str_repeat('★', round($row['avg_rating'])) . str_repeat('☆', 5 - round($row['avg_rating'])) ?>
+                                    </span>
+                                    <span class="text-dark">(<?= $row['avg_rating'] ?>/5 • <?= $row['review_count'] ?> lượt)</span>
+                                <?php else: ?>
+                                    <span class="text-muted">Chưa có đánh giá</span>
+                                <?php endif; ?>
+                            </p>
 
                             <?php if ($row['quantity'] > 0): ?>
                                 <span class="badge bg-success mb-2">Còn hàng</span>

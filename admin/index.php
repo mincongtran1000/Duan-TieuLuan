@@ -37,7 +37,6 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
                                 <li><a class="dropdown-item" href="users/index.php">Trang Users</a></li>
                             </ul>
                         </div>
-                        <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
                     </div>
                 </div>
             </div>
@@ -53,9 +52,18 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
             <div class="col-md-4">
                 <div class="card text-bg-success mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">Giao dịch</h5>
+                        <h5 class="card-title">✍️Giao dịch</h5>
                         <p class="card-text">xem chi tiết giao dịch</p>
                         <a href="transaction/index.php" class="btn btn-light btn-sm">Xem chi tiết</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-bg-success mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">📊Đánh giá </h5>
+                        <p class="card-text">xem chi tiết giao dịch</p>
+                        <a href="ratings/index.php" class="btn btn-light btn-sm">Xem chi tiết</a>
                     </div>
                 </div>
             </div>

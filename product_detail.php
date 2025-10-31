@@ -32,6 +32,33 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
         <div class="text-center mb-4">
             <h2 class="fw-bold"><?php echo htmlspecialchars($product['name']); ?></h2>
 
+            <?php
+            $avg_stmt = $conn->prepare("
+    SELECT ROUND(AVG(rating), 1) AS avg_rating, COUNT(*) AS review_count
+    FROM product_reviews
+    WHERE product_id = ?
+");
+            $avg_stmt->bind_param("i", $id);
+            $avg_stmt->execute();
+            $avg_result = $avg_stmt->get_result()->fetch_assoc();
+            $avg_rating = $avg_result['avg_rating'] ?? 0;
+            $review_count = $avg_result['review_count'] ?? 0;
+            ?>
+
+            <!-- Hiển thị đánh giá trung bình to rõ -->
+            <div class="mt-2">
+                <?php if ($review_count > 0): ?>
+                    <div class="fs-4 text-warning">
+                        <?= str_repeat('★', round($avg_rating)) . str_repeat('☆', 5 - round($avg_rating)) ?>
+                        <span class="text-dark fw-semibold">
+                            <?= $avg_rating ?>/5 (<?= $review_count ?> lượt)
+                        </span>
+                    </div>
+                <?php else: ?>
+                    <p class="text-muted fs-5">Chưa có đánh giá</p>
+                <?php endif; ?>
+            </div>
+
             <div class="d-flex justify-content-center gap-2 mt-3">
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#shortDescModal">
                     Mô tả ngắn
@@ -133,11 +160,73 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
                 </div>
             </div>
         </div>
+        <div class="mt-5">
+            <h5>Phản hồi từ khách hàng</h5>
+            <?php
+        $review_stmt = $conn->prepare("
+    SELECT r.*, u.username 
+    FROM product_reviews r 
+    JOIN users u ON r.user_id = u.id
+    WHERE r.product_id = ?
+    ORDER BY r.created_at DESC
+    LIMIT 5
+");
+        $review_stmt->bind_param("i", $product['id']);
+            $review_stmt->execute();
+            $reviews = $review_stmt->get_result();
+
+            if ($reviews->num_rows > 0):
+                while ($rev = $reviews->fetch_assoc()):
+            ?>
+                    <div class="border p-2 rounded mb-3">
+                        <strong><?php echo htmlspecialchars($rev['username']); ?></strong>
+                        <span class="text-warning">
+                            <?php echo str_repeat('★', $rev['rating']); ?>
+                            <?php echo str_repeat('☆', 5 - $rev['rating']); ?>
+                        </span>
+                        <p class="mb-1"><?php echo htmlspecialchars($rev['comment']); ?></p>
+                        <small class="text-muted"><?php echo $rev['created_at']; ?></small>
+                    </div>
+                <?php endwhile;
+            else: ?>
+                <p class="text-muted">Chưa có đánh giá nào.</p>
+            <?php endif; ?>
+        </div>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <div class="mt-4">
+                <h6>Gửi đánh giá của bạn</h6>
+                <form action="submit_review.php" method="POST">
+                    <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+
+                    <div class="mb-3">
+                        <label for="rating" class="form-label">Chấm sao:</label>
+                        <select name="rating" id="rating" class="form-select w-auto" required>
+                            <option value="">-- Chọn --</option>
+                            <option value="5">★★★★★ - Tuyệt vời</option>
+                            <option value="4">★★★★☆ - Tốt</option>
+                            <option value="3">★★★☆☆ - Trung bình</option>
+                            <option value="2">★★☆☆☆ - Kém</option>
+                            <option value="1">★☆☆☆☆ - Tệ</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="comment" class="form-label">Nhận xét:</label>
+                        <textarea name="comment" id="comment" class="form-control" rows="3" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                </form>
+            </div>
+        <?php else: ?>
+            <p class="text-muted mt-3">Vui lòng <a href="login.php">đăng nhập</a> để gửi đánh giá.</p>
+        <?php endif; ?>
 
     <?php else: ?>
         <p class="text-center text-danger">Sản phẩm không tồn tại.</p>
     <?php endif; ?>
 </div>
+
 
 <style>
     /* Modal short_desc */
@@ -149,7 +238,9 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
         display: block;
         margin: 0 auto;
         /* căn giữa nếu muốn */
-    }    .product-view {
+    }
+
+    .product-view {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -190,7 +281,6 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
         transform: scale(1.1);
         border-color: #0d6efd;
     }
-    
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

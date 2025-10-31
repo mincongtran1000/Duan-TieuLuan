@@ -3,14 +3,43 @@ session_start();
 require 'includes/db.php';
 require 'includes/header.php';
 require 'includes/navbar.php';
+
+// Nếu chưa đăng nhập, hiển thị giao diện yêu cầu đăng nhập
 if (!isset($_SESSION['user_id'])) {
-    die("Bạn cần đăng nhập để xem giỏ hàng.");
+    echo '
+    <div style="
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        height:100vh;
+        flex-direction:column;
+        font-family:Arial, sans-serif;
+    ">
+        <p style="font-size:20px; margin-bottom:20px;">
+            Bạn cần đăng nhập để xem giỏ hàng.
+        </p>
+        <a href="login.php" 
+           style="
+               padding:12px 30px;
+               background:#007bff;
+               color:white;
+               border-radius:6px;
+               text-decoration:none;
+               font-size:16px;
+           "
+           onmouseover="this.style.background=\'#0056b3\'"
+           onmouseout="this.style.background=\'#007bff\'">
+           Đăng nhập
+        </a>
+    </div>';
+    require 'includes/footer.php';
+    exit();
 }
 
 $user_id = intval($_SESSION['user_id']);
 
-    // Lấy danh sách giao dịch của người dùng
-    $query = "
+// Lấy danh sách sản phẩm trong transaction đang pending
+$query = "
     SELECT 
         o.product_id, 
         SUM(o.quantity) AS total_quantity, 
@@ -33,17 +62,17 @@ $user_id = intval($_SESSION['user_id']);
     ORDER BY p.name ASC
 ";
 
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+?>
 
-    ?>
 <div class="container my-4">
     <h2 class="mb-4">Giỏ hàng của bạn</h2>
     <?php if ($result && $result->num_rows > 0): ?>
-        <table class="table table-bordered">
-            <thead>
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
                 <tr>
                     <th>Hình ảnh</th>
                     <th>Sản phẩm</th>
@@ -58,15 +87,9 @@ $user_id = intval($_SESSION['user_id']);
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <tr>
                         <td>
-                            <?php if (!empty($row['main_image'])): ?>
-                                <img src="http://localhost/my_website/uploads/products/<?php echo htmlspecialchars($row['main_image']); ?>"
-                                    alt="<?php echo htmlspecialchars($row['product_name']); ?>"
-                                    style="width: 80px; height: 80px; object-fit: cover;">
-                            <?php else: ?>
-                                <img src="http://localhost/my_website/uploads/no-image.png"
-                                    alt="No image"
-                                    style="width: 80px; height: 80px; object-fit: cover;">
-                            <?php endif; ?>
+                            <img src="http://localhost/my_website/uploads/products/<?php echo htmlspecialchars($row['main_image'] ?? 'no-image.png'); ?>"
+                                alt="<?php echo htmlspecialchars($row['product_name']); ?>"
+                                style="width: 80px; height: 80px; object-fit: cover;">
                         </td>
                         <td><?php echo htmlspecialchars($row['product_name']); ?></td>
                         <td><?php echo htmlspecialchars($row['category_name']); ?></td>
@@ -87,6 +110,11 @@ $user_id = intval($_SESSION['user_id']);
             <button type="submit" class="btn btn-success btn-lg mt-3">Thanh toán</button>
         </form>
     <?php else: ?>
-        <p class="text-muted">Giỏ hàng của bạn đang trống.</p>
+        <div class="text-center text-muted" style="margin-top:50px;">
+            <p style="font-size:18px;">Giỏ hàng của bạn đang trống.</p>
+            <a href="index.php" class="btn btn-primary mt-3">Tiếp tục mua sắm</a>
+        </div>
     <?php endif; ?>
 </div>
+
+<?php require 'includes/footer.php'; ?>

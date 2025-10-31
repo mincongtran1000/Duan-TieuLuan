@@ -36,20 +36,30 @@ $result = $conn->query($sql);
 
     <div class="row g-4">
         <?php
-        // Truy vấn sản phẩm dựa vào từ khóa tìm kiếm
         $search = isset($_GET['search']) ? '%' . $_GET['search'] . '%' : '%';
+
         $sql = "
-            SELECT p.*, c.name AS category_name, pi.image AS main_image
-            FROM products p
-            LEFT JOIN categories c ON p.category_id = c.id
-            LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.is_main = 1
-            WHERE p.is_hidden = 0 AND p.name LIKE ?
-            ORDER BY p.created_at DESC
-        ";
+                SELECT p.*, c.name AS category_name, pi.image AS main_image,
+                    IFNULL(pr.avg_rating, 0) AS avg_rating,
+                    IFNULL(pr.cnt, 0) AS review_count
+                FROM products p
+                LEFT JOIN categories c ON p.category_id = c.id
+                LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.is_main = 1
+                LEFT JOIN (
+                    SELECT product_id, ROUND(AVG(rating),1) AS avg_rating, COUNT(*) AS cnt
+                    FROM product_reviews
+                    GROUP BY product_id
+                ) pr ON pr.product_id = p.id
+                WHERE p.is_hidden = 0
+                AND p.name LIKE ?
+                ORDER BY p.created_at DESC
+            ";
+
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $search);
         $stmt->execute();
         $result = $stmt->get_result();
+
         ?>
         <?php if ($result && $result->num_rows > 0): ?>
             <?php while ($row = $result->fetch_assoc()): ?>
@@ -83,6 +93,20 @@ $result = $conn->query($sql);
                         <!-- Nội dung -->
                         <div class="card-body text-center">
                             <h6 class="card-title"><?php echo htmlspecialchars($row['name']); ?></h6>
+                            <!-- Đánh giá trung bình -->
+                            <p class="mb-1">
+                                <?php if ($row['review_count'] > 0): ?>
+                                    <span class="text-warning">
+                                        <?= str_repeat('★', round($row['avg_rating'])) . str_repeat('☆', 5 - round($row['avg_rating'])) ?>
+                                    </span>
+                                    <span class="text-dark">
+                                        (<?= $row['avg_rating'] ?>/5 • <?= $row['review_count'] ?> lượt)
+                                    </span>
+                                <?php else: ?>
+                                    <span class="text-muted">Chưa có đánh giá</span>
+                                <?php endif; ?>
+                            </p>
+
                             <p class="card-text text-muted mb-1">
                                 <?php
                                 $gift_query = $conn->prepare("SELECT gift_description FROM product_gifts WHERE product_id = ?");
