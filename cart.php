@@ -109,6 +109,7 @@ $result = $stmt->get_result();
         <form action="checkout.php" method="POST">
             <button type="submit" class="btn btn-success btn-lg mt-3">Thanh toán</button>
         </form>
+
     <?php else: ?>
         <div class="text-center text-muted" style="margin-top:50px;">
             <p style="font-size:18px;">Giỏ hàng của bạn đang trống.</p>
@@ -116,5 +117,6 @@ $result = $stmt->get_result();
         </div>
     <?php endif; ?>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <?php require 'includes/footer.php'; ?>

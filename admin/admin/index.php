@@ -1,7 +1,8 @@
 <?php
 session_start();
+require '../autoload/session.php';
 require '../autoload/db.php';
-
+require '../layouts/header.php';
 // Nếu có yêu cầu xoá
 if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
@@ -31,7 +32,6 @@ if (isset($_GET['delete'])) {
     header("Location: index.php");
     exit;
 }
-
 // Lấy danh sách admin
 $result = $conn->query("SELECT id, username, email, created_at FROM admin");
 ?>
@@ -46,9 +46,7 @@ $result = $conn->query("SELECT id, username, email, created_at FROM admin");
 
 <body class="p-4">
     <div class="container">
-        <a href="../index.php" class="btn btn-secondary mb-3">⬅ Quay lại Dashboard</a>
         <h2>Danh sách Admin</h2>
-
         <!-- Hiển thị thông báo -->
         <?php if (isset($_SESSION['success_message'])): ?>
             <div class="alert alert-success">
@@ -103,5 +101,80 @@ $result = $conn->query("SELECT id, username, email, created_at FROM admin");
         </table>
     </div>
 </body>
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h2 {
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .container {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        max-width: 900px;
+    }
+
+    table {
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th {
+        background-color: #198754;
+        color: #fff;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .badge {
+        font-size: 0.8rem;
+        padding: 0.4em 0.6em;
+        border-radius: 6px;
+    }
+
+    .badge.bg-danger {
+        background-color: #dc3545;
+    }
+
+    .badge.bg-primary {
+        background-color: #0d6efd;
+    }
+
+    .btn-danger.btn-sm {
+        padding: 4px 10px;
+        font-size: 14px;
+        transition: 0.2s;
+    }
+
+    .btn-danger.btn-sm:hover {
+        background-color: #c82333;
+        box-shadow: 0 2px 8px rgba(200, 50, 50, 0.3);
+    }
+
+    .alert {
+        border-radius: 6px;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f8ff;
+        transition: 0.2s;
+    }
+
+    a.btn-secondary {
+        margin-bottom: 20px;
+    }
+</style>
 
 </html>

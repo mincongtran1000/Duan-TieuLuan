@@ -1,8 +1,8 @@
 <?php
-session_start(); // thêm dòng này
+session_start();
 require '../autoload/db.php';
+require '../layouts/header.php';
 
-// Lấy danh sách user
 $result = $conn->query("SELECT id, username, fullname, email, phone, address, avatar, created_at FROM users");
 ?>
 <!doctype html>
@@ -12,14 +12,62 @@ $result = $conn->query("SELECT id, username, fullname, email, phone, address, av
     <meta charset="utf-8">
     <title>Danh sách người dùng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        h2 {
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        table {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #198754;
+            color: #fff;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        img {
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .btn-danger.btn-sm {
+            padding: 4px 10px;
+            font-size: 14px;
+        }
+
+        .alert {
+            border-radius: 6px;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 
 <body class="p-4">
     <div class="container">
         <a href="../index.php" class="btn btn-secondary mb-3">⬅ Quay lại Dashboard</a>
-        <h2>Danh sách người dùng</h2>
+        <h2>👥 Danh sách người dùng</h2>
 
-        <!-- HIỂN THỊ THÔNG BÁO -->
         <?php if (isset($_SESSION['success_message'])): ?>
             <div class="alert alert-success">
                 <?= $_SESSION['success_message']; ?>
@@ -33,9 +81,8 @@ $result = $conn->query("SELECT id, username, fullname, email, phone, address, av
             </div>
             <?php unset($_SESSION['error_message']); ?>
         <?php endif; ?>
-        <!-- END THÔNG BÁO -->
 
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped align-middle">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -60,16 +107,14 @@ $result = $conn->query("SELECT id, username, fullname, email, phone, address, av
                         <td><?= htmlspecialchars($row['address']) ?></td>
                         <td>
                             <?php if (!empty($row['avatar'])): ?>
-                                <img src="http://localhost/my_website/uploads/avatars/<?= htmlspecialchars($row['avatar']); ?>"
-                                    alt="avatar" width="50" height="50" style="object-fit:cover;border-radius:50%;">
+                                <img src="http://localhost/my_website/uploads/avatars/<?= htmlspecialchars($row['avatar']); ?>" alt="avatar" width="50" height="50">
                             <?php else: ?>
                                 <span class="text-muted">Chưa có</span>
                             <?php endif; ?>
                         </td>
                         <td><?= htmlspecialchars($row['created_at']) ?></td>
                         <td>
-                            <a href="delete.php?id=<?= $row['id']; ?>"
-                                class="btn btn-danger btn-sm"
+                            <a href="delete.php?id=<?= $row['id']; ?>" class="btn btn-danger btn-sm"
                                 onclick="return confirm('Bạn có chắc muốn xóa user này?');">
                                 Xóa
                             </a>

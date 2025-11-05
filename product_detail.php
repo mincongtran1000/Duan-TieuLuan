@@ -61,10 +61,10 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
 
             <div class="d-flex justify-content-center gap-2 mt-3">
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#shortDescModal">
-                    Mô tả ngắn
+                    Thông tin chi tiết
                 </button>
                 <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#longDescModal">
-                    Mô tả chi tiết
+                    Thông tin sản phẩm
                 </button>
             </div>
         </div>
@@ -138,7 +138,7 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5>Mô tả ngắn</h5>
+                        <h5>Thông tin sản phẩm</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body product-desc">
@@ -151,7 +151,7 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
             <div class="modal-dialog modal-dialog-scrollable modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5>Mô tả chi tiết</h5>
+                        <h5>Thông tin chi tiết</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
@@ -247,7 +247,7 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
     }
 
     .main-image-box {
-        width: 480px;
+        width: 380px;
         height: 480px;
         display: flex;
         align-items: center;
@@ -268,7 +268,7 @@ $is_new = $product ? in_array($product['id'], $newest_ids) : false;
     }
 
     .thumbs img.thumb-img {
-        width: 100px;
+        width: 80px;
         height: 100px;
         object-fit: cover;
         cursor: pointer;

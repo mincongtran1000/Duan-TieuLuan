@@ -1,7 +1,7 @@
 <?php
 require '../autoload/session.php';
 require '../autoload/db.php';
-
+require '../layouts/header.php';
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: ../login.php");
     exit;
@@ -31,12 +31,9 @@ $sql = "SELECT p.*, c.name as category_name,
         ORDER BY p.created_at DESC
         LIMIT $limit OFFSET $offset";
 $result = $conn->query($sql);
-
-
 ?>
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
     <title>Quản lý sản phẩm</title>
@@ -46,8 +43,7 @@ $result = $conn->query($sql);
 <body class="bg-light">
     <div class="container-fluid mt-2">
         <h2>📦 Quản lý sản phẩm</h2>
-        <a href="../index.php" class="btn btn-secondary mb-3">⬅ Quay lại Dashboard</a>
-        <a href="add.php" class="btn btn-primary mb-3">➕ Thêm sản phẩm</a>
+       <a href="add.php" class="btn btn-primary mb-3">➕ Thêm sản phẩm</a>
 
         <table class="table table-bordered table-striped">
             <thead class="table-dark">

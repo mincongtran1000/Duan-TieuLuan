@@ -1,6 +1,7 @@
 <?php
 require '../autoload/session.php';
 require '../autoload/db.php';
+require '../layouts/header.php';
 
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: ../login.php");
@@ -40,9 +41,7 @@ $result = $conn->query($sql);
 <body>
 
     <div class="container my-4">
-        <a href="../index.php" class="btn btn-secondary mb-3">⬅ Quay lại Dashboard</a>
         <h2 class="mb-4">Quản lý giao dịch</h2>
-
         <?php if ($result && $result->num_rows > 0): ?>
             <table class="table table-bordered table-hover align-middle">
                 <thead class="table-success">

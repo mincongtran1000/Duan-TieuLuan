@@ -1,13 +1,14 @@
 <?php
 require 'session.php';
-// require 'layouts/header.php';
 require '../includes/db.php';
-// Chỉ cho admin đã đăng nhập vào
+require 'layouts/header.php';
+
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: login.php");
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -33,8 +34,8 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
                                 Xem chi tiết
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="admin/index.php">Trang Admin</a></li>
-                                <li><a class="dropdown-item" href="users/index.php">Trang Users</a></li>
+                                <li><a class="dropdown-item" href="admin/index.php">👨‍💼 Trang Admin</a></li>
+                                <li><a class="dropdown-item" href="users/index.php">👥 Trang Users</a></li>
                             </ul>
                         </div>
                     </div>
@@ -131,8 +132,8 @@ ORDER BY t.created_at DESC
 
         <a href="logout.php" class="btn btn-danger mt-3">Đăng xuất</a>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> -->
     <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
@@ -171,8 +172,8 @@ ORDER BY t.created_at DESC
             });
         });
     </script>
-
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

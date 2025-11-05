@@ -1,7 +1,7 @@
 <?php
-require '../session.php';
-require '../../includes/db.php';
-
+        require '../autoload/session.php';
+        require '../autoload/db.php';
+        require '../layouts/header.php';
 // Chỉ cho admin đăng nhập
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
     header("Location: ../login.php");
@@ -37,7 +37,6 @@ $result = $conn->query($sql);
 
     <div class="container mt-5">
 
-        <a href="../index.php" class="btn btn-secondary mb-3">⬅ Quay lại Dashboard</a>
         <h1 class="mb-4">📊 Quản lý đánh giá sản phẩm</h1>
 
         <?php if ($result && $result->num_rows > 0): ?>
